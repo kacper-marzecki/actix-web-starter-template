@@ -3,7 +3,6 @@ extern crate envconfig_derive;
 
 mod configuration;
 mod app;
-
 use dotenv;
 use envconfig::Envconfig;
 use std::{env};

@@ -3,12 +3,7 @@ pub mod app_state;
 use app_state::AppState;
 use crate::configuration::AppConfiguration;
 use actix_cors::{Cors, CorsFactory};
-use actix_web::{
-    HttpServer,
-    App,
-    web::Data,
-    http::header::{AUTHORIZATION, CONTENT_TYPE},
-};
+use actix_web::{web, middleware::Logger, HttpServer, App, web::Data, http::header::{AUTHORIZATION, CONTENT_TYPE}, HttpResponse};
 
 pub fn start(config: AppConfiguration)  {
     let app_url = format!("127.0.0.1:{}", config.app_port);
@@ -17,9 +12,9 @@ pub fn start(config: AppConfiguration)  {
         let state = AppState {};
         App::new()
             .data(Data::new(state))
-            // .wrap(Logger::default())
+            .wrap(Logger::default())
             .wrap(cors)
-            // .configure(routes)
+            .configure(routing_configuration)
         })
         .bind(app_url)
         .unwrap()
@@ -40,4 +35,8 @@ fn get_cors(config: &AppConfiguration)-> CorsFactory {
             .max_age(3600)
             .finish(),
     }
+}
+
+fn routing_configuration(app: &mut web::ServiceConfig) {
+    app.service(web::resource("/").to( || HttpResponse::Ok()));
 }
