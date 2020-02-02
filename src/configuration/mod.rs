@@ -3,7 +3,6 @@ extern crate envconfig;
 use envconfig::Envconfig;
 use std::env;
 
-
 #[allow(dead_code)]
 #[derive(Envconfig)]
 #[derive(Debug)]
@@ -16,6 +15,8 @@ pub struct AppConfiguration {
     pub database_url: String,
     #[envconfig(from = "RUST_LOG", default = "app=debug,actix_web=info")]
     pub env_log_configuration: String,
+    #[envconfig(from = "FRONTEND_ORIGIN")]
+    pub frontend_url: Option<String> 
 }
 
 #[allow(dead_code)]
