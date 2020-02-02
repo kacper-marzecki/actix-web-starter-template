@@ -10,9 +10,10 @@ use actix_web::{
     http::header::{AUTHORIZATION, CONTENT_TYPE},
 };
 
-pub fn start(config: &AppConfiguration)  {
-    let cors = get_cors(&config);
+pub fn start(config: AppConfiguration)  {
+    let app_url = format!("127.0.0.1:{}", config.app_port);
     HttpServer::new(move || {
+        let cors = get_cors(&config);
         let state = AppState {};
         App::new()
             .data(Data::new(state))
@@ -20,13 +21,13 @@ pub fn start(config: &AppConfiguration)  {
             .wrap(cors)
             // .configure(routes)
         })
-        .bind("127.0.0.1:8080")
+        .bind(app_url)
         .unwrap()
         .run();
 }
 
 fn get_cors(config: &AppConfiguration)-> CorsFactory {
-    match config.frontend_url {
+    match &config.frontend_url {
         Some(frontend_url) => Cors::new()
             .allowed_origin(&frontend_url)
             .allowed_headers(vec![AUTHORIZATION, CONTENT_TYPE])

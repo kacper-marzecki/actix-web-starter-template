@@ -5,7 +5,7 @@ use std::env;
 
 #[allow(dead_code)]
 #[derive(Envconfig)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AppConfiguration {
     #[envconfig(from = "DB_HOST", default = "127.0.0.1")]
     pub database_host: String,
@@ -16,7 +16,9 @@ pub struct AppConfiguration {
     #[envconfig(from = "RUST_LOG", default = "app=debug,actix_web=info")]
     pub env_log_configuration: String,
     #[envconfig(from = "FRONTEND_ORIGIN")]
-    pub frontend_url: Option<String> 
+    pub frontend_url: Option<String>,
+    #[envconfig(from = "APP_PORT", default = "8081")]
+    pub app_port: String, 
 }
 
 #[allow(dead_code)]

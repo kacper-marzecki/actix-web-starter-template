@@ -17,6 +17,6 @@ fn main() {
     configuration::setup_logger(&app_configuration);
 
     let sys = actix::System::new("app");
-    app::start(&app_configuration);
+    app::start(app_configuration);
     let _ = sys.run();
 }
