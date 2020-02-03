@@ -6,6 +6,8 @@ extern crate diesel;
 mod configuration;
 mod app;
 mod repository;
+mod service;
+mod model;
 
 use dotenv;
 use envconfig::Envconfig;
