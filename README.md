@@ -8,7 +8,7 @@ Roadmap:
   - [x] cors 
   - [x] db url
   - [x] logging
-- [ ] db actor 
+- [x] db actor 
 - [ ] diesel setup
 - [ ] basic crud routes
 - [ ] serving static resources

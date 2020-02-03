@@ -5,6 +5,9 @@ use diesel::{
 };
 use actix::SyncContext;
 
+pub mod schema;
+
+
 type ConnectionPool = Pool<ConnectionManager<PgConnection>>;
 
 pub struct Repository(ConnectionPool);

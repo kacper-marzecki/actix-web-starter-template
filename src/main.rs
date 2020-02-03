@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate envconfig_derive;
+#[macro_use]
+extern crate diesel;
 
 mod configuration;
 mod app;
