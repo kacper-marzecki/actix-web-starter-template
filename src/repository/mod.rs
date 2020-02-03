@@ -1,14 +1,16 @@
 use actix::prelude::{Actor, SyncArbiter};
 use diesel::{
     pg::PgConnection,
-    r2d2::{self, ConnectionManager, Pool, PooledConnection},
+    r2d2::{self, ConnectionManager, Pool, PooledConnection,},
 };
 use actix::SyncContext;
 
 pub mod schema;
+pub use crate::error::ApplicationError;
+use std::error::Error;
 
-
-type ConnectionPool = Pool<ConnectionManager<PgConnection>>;
+type ConnectionMgr = ConnectionManager<PgConnection>;
+type ConnectionPool = Pool<ConnectionMgr>;
 
 pub struct Repository(ConnectionPool);
 
@@ -19,6 +21,9 @@ impl Actor for Repository {
 impl Repository {
     fn new(database_url: String)-> Self {
         Repository(new_pool(database_url))
+    }
+    fn get_conn(self) -> Result<PooledConnection<ConnectionMgr>, ApplicationError> {
+        self.0.get().map_err( ApplicationError::from)
     }
 }
 

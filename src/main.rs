@@ -2,12 +2,15 @@
 extern crate envconfig_derive;
 #[macro_use]
 extern crate diesel;
+#[macro_use]
+extern crate failure;
 
 mod configuration;
 mod app;
 mod repository;
 mod service;
 mod model;
+mod error;
 
 use dotenv;
 use envconfig::Envconfig;

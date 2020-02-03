@@ -4,7 +4,7 @@ use uuid::Uuid;
 use crate::repository::schema::users;
 
 #[derive(Debug, Queryable, Identifiable)]
-pub struct UserEntity {
+pub struct User {
     pub id: Uuid,
     pub username: String,
     pub email: String,

@@ -13,6 +13,7 @@ Roadmap:
 - [ ] basic crud routes
 - [ ] serving static resources
 - [ ] websocket connections 
+- [ ] better error handling 
 - [ ] user  
   - [ ] registration & authentication 
   - [ ] OAuth
