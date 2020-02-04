@@ -4,10 +4,12 @@ use diesel::{
     r2d2::{self, ConnectionManager, Pool, PooledConnection,},
 };
 use actix::SyncContext;
+use std::error::Error;
+pub use crate::common::AppError;
 
 pub mod schema;
-pub use crate::error::ApplicationError;
-use std::error::Error;
+pub mod authentication;
+pub mod user;
 
 type ConnectionMgr = ConnectionManager<PgConnection>;
 type ConnectionPool = Pool<ConnectionMgr>;
@@ -19,11 +21,11 @@ impl Actor for Repository {
 }
 
 impl Repository {
-    fn new(database_url: String)-> Self {
+    pub fn new(database_url: String)-> Self {
         Repository(new_pool(database_url))
     }
-    fn get_conn(self) -> Result<PooledConnection<ConnectionMgr>, ApplicationError> {
-        self.0.get().map_err( ApplicationError::from)
+    pub fn get_conn(self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
+        self.0.get().map_err( AppError::from)
     }
 }
 

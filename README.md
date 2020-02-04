@@ -9,6 +9,7 @@ Roadmap:
   - [x] db url
   - [x] logging
 - [x] db actor 
+- [ ] db result caching layer 
 - [ ] diesel setup
 - [ ] basic crud routes
 - [ ] serving static resources

@@ -4,17 +4,22 @@ extern crate envconfig_derive;
 extern crate diesel;
 #[macro_use]
 extern crate failure;
+#[macro_use]
+extern crate serde_json;
+#[macro_use]
+extern crate serde_derive;
 
 mod configuration;
 mod app;
 mod repository;
 mod service;
 mod model;
-mod error;
+mod common;
 
 use dotenv;
 use envconfig::Envconfig;
 use std::{env};
+
 
 fn main() {
     dotenv::dotenv().ok();
