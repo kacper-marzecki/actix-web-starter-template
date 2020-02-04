@@ -18,12 +18,16 @@ pub struct AppConfiguration {
     #[envconfig(from = "FRONTEND_ORIGIN")]
     pub frontend_url: Option<String>,
     #[envconfig(from = "APP_PORT", default = "8081")]
-    pub app_port: String, 
+    pub app_port: String,
+    #[envconfig(from = "SECRET", default = "7057afe6c0e68584ae2d7c853accc67bdd15edb72d39af0f88ea1e94bc609930")]
+    pub secret: String,
+    #[envconfig(from = "DOMAIN", default = "localhost")]
+    pub domain: String,
 }
 
 #[allow(dead_code)]
 impl AppConfiguration {
-    fn get_database_url(self: &AppConfiguration) -> String {
+    pub fn get_database_url(self: &AppConfiguration) -> String {
         return if self.database_url.is_empty() {
             format!("{}:{}", self.database_host.clone(), &self.database_port.clone()) 
         } else {

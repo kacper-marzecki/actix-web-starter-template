@@ -3,6 +3,6 @@ use crate::repository::Repository;
 use crate::configuration::AppConfiguration;
 
 pub struct AppState {
-    repository: Addr<Repository>,
-    app_configuration: AppConfiguration,
+    pub repository: Addr<Repository>,
+    pub app_configuration: AppConfiguration,
 }

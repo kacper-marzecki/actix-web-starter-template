@@ -17,6 +17,8 @@ actix-cors = "0.2.0"
 actix-service = "1.0.5"
     # Basic http primitives for actix-net framework.
 actix-http = "1.0.1"
+    # identity service
+actix-identity = "0.2.1"
     # Date time library 
 chrono = "0.4.10"
     # ORM
@@ -61,3 +63,4 @@ validator_derive = "0.10.0"
 envconfig = "0.6.0"
     # env configuration into structs macros
 envconfig_derive = "0.6.0"
+argonautica = "0.2.0"

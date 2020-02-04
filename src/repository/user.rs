@@ -4,12 +4,10 @@ use crate::common::*;
 use crate::repository::Repository;
 use crate::model::user::User;
 use jsonwebtoken::TokenData;
-use crate::service::authentication::Claims;
 
 
 #[derive(Debug)]
 pub struct Authenticate {
-    pub claims_id: TokenData<Claims>,
     pub token: String,
 }
 
@@ -24,19 +22,37 @@ impl Message for Authenticate {
 }
 
 impl Handler<Authenticate> for Repository {
-    type Result = AppResult<Auth>;
+    type Result = AppResult<Authentication>;
 
     fn handle(&mut self, msg: Authenticate, _: &mut Self::Context) -> Self::Result {
-        use crate::repository::schema::users::dsl::*;
-        let conn = &self.get_conn();
-
-
-        match users.find(msg.claims_id).first(conn) {
-            Ok(user) => Ok(Authentication {
-                user,
-                token: msg.token,
-            }),
-            Err(e) => Err(e.into()),
-        }
+        Err(AppError::InternalServerError)
+//        use crate::repository::schema::users::dsl::*;
+//        let conn = &self.get_conn()?;
+//        match users.find(msg.claims_id).first(conn) {
+//            Ok(user) => Ok(Authentication {
+//                user,
+//                token: msg.token,
+//            }),
+//            Err(e) => Err(e.into()),
+//        }
     }
 }
+
+
+#[derive(Debug)]
+pub struct RegisterUser {
+    pub username: String,
+    pub email: String,
+    pub password_hash: String,
+}
+
+impl Message for RegisterUser {
+    type Result = AppResult<User>;
+}
+
+//impl Handler<RegisterUser> for Repository {
+//    type Result = AppResult<User>;
+//    fn handle(&mut self, msg: RegisterUser, ctx: &mut Self::Context) -> Self::Result {
+//        use crate::repository::schema::users::dsl::users;
+//    }
+//}
