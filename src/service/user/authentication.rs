@@ -27,14 +27,10 @@ pub fn hash_password(password: &str) -> Result<String, AppError> {
         })
 }
 
-pub fn verify(hash: &str, password: &str) -> Result<bool, AppError> {
+pub fn verify(hash: &str, password: &str) -> Result<bool, argonautica::Error> {
     Verifier::default()
         .with_hash(hash)
         .with_password(password)
         .with_secret_key(SECRET_KEY.as_str())
         .verify()
-        .map_err(|err| {
-            dbg!(err);
-            AppError::Unauthorized
-        })
 }

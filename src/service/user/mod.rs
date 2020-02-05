@@ -13,20 +13,17 @@ use diesel::PgConnection;
 use crate::service::user::request::RegisterUserRequest;
 use actix_web::error::BlockingError;
 
-pub fn register(
+pub fn register_user(
     user_data: web::Json<RegisterUserRequest>,
     state: web::Data<AppState>,
 ) -> Result< HttpResponse, AppError> {
     let repository = state.repository.clone();
-    web::block(move || {
-//        repository.send()
-        Err(AppError::InternalServerError)
-    })
-        .then(|res| match res {
-            Ok(user) => Ok(HttpResponse::Ok().json(&user)),
-            Err(err) => match err {
-                BlockingError::Error(service_error) => Err(service_error),
-                BlockingError::Canceled => Err(AppError::InternalServerError),
-            },
-        })
+    let repository_result =  Ok("");
+    match repository_result {
+        Ok(user) => Ok(HttpResponse::Ok().json(&user)),
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(AppError::InternalServerError),
+        },
+    }
 }

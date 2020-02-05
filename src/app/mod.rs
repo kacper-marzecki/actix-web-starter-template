@@ -13,9 +13,10 @@ pub fn start(config: AppConfiguration)  {
     let app_url = format!("127.0.0.1:{}", config.app_port);
     HttpServer::new(move || {
         let cors = get_cors(&config);
+        let database_url = config.get_database_url();
         let database_address = SyncArbiter::start(
             num_cpus::get(),
-            move || Repository::new(config.get_database_url().clone()));
+            move || Repository::new(database_url.clone()));
         let state = AppState {
             app_configuration: config.clone(),
             repository: database_address,

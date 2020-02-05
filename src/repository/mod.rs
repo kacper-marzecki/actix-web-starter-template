@@ -22,7 +22,7 @@ impl Actor for Repository {
 
 impl Repository {
     pub fn new(database_url: String)-> Self {
-        Repository(new_pool(database_url))
+        Repository(new_pool(database_url.clone()))
     }
     pub fn get_conn(self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
         self.0.get().map_err( AppError::from)
