@@ -9,9 +9,9 @@ use std::env;
 pub struct AppConfiguration {
     #[envconfig(from = "DB_HOST", default = "127.0.0.1")]
     pub database_host: String,
-    #[envconfig(from = "DB_HOST", default = "5432")]
+    #[envconfig(from = "DB_PORT", default = "5432")]
     pub database_port: String,
-    #[envconfig(from = "DB_HOST", default = "")]
+    #[envconfig(from = "DB_URL", default = "")]
     pub database_url: String,
     #[envconfig(from = "RUST_LOG", default = "app=debug,actix_web=info")]
     pub env_log_configuration: String,

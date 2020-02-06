@@ -25,7 +25,7 @@ impl Repository {
         Repository(new_pool(database_url.clone()))
     }
     pub fn get_conn(self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
-        self.0.get().map_err( AppError::from)
+        self.0.get().map_err(AppError::from)
     }
 }
 

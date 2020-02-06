@@ -9,7 +9,7 @@ use crate::repository::Repository;
 use actix_identity::{IdentityService, CookieIdentityPolicy};
 
 pub fn start(config: AppConfiguration)  {
-    let domain: String = std::env::var("DOMAIN").unwrap();
+    let domain: String = config.domain.clone();
     let app_url = format!("127.0.0.1:{}", config.app_port);
     HttpServer::new(move || {
         let cors = get_cors(&config);
@@ -57,5 +57,8 @@ fn get_cors(config: &AppConfiguration)-> CorsFactory {
 }
 
 fn routing_configuration(app: &mut web::ServiceConfig) {
-    app.service(web::resource("/").to( || HttpResponse::Ok()));
+    app.service(web::resource("/").to( |config: Data<AppConfiguration>| {
+        println!("{:?}", config);
+        HttpResponse::Ok()
+    }));
 }
