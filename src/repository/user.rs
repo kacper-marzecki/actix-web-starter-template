@@ -4,7 +4,7 @@ use crate::common::*;
 use crate::repository::Repository;
 use crate::model::user::User;
 use jsonwebtoken::TokenData;
-
+use crate::repository::schema::*;
 
 #[derive(Debug)]
 pub struct Authenticate {
@@ -39,7 +39,8 @@ impl Handler<Authenticate> for Repository {
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, Insertable)]
+#[table_name = "users"]
 pub struct RegisterUser {
     pub username: String,
     pub email: String,
@@ -50,9 +51,14 @@ impl Message for RegisterUser {
     type Result = AppResult<User>;
 }
 
-//impl Handler<RegisterUser> for Repository {
-//    type Result = AppResult<User>;
-//    fn handle(&mut self, msg: RegisterUser, ctx: &mut Self::Context) -> Self::Result {
-//        use crate::repository::schema::users::dsl::users;
-//    }
-//}
+impl Handler<RegisterUser> for Repository {
+   type Result = AppResult<User>;
+   fn handle(&mut self, msg: RegisterUser, ctx: &mut Self::Context) -> Self::Result {
+       use crate::repository::schema::users::dsl::*;
+       let conn = self.get_conn()?;
+       return diesel::insert_into(users::table)
+           .values(msg)
+           .get_result(&conn)
+           .map_err(|err| AppError::InternalServerError);
+   }
+}
