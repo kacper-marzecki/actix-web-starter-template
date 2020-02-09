@@ -1,9 +1,9 @@
 pub mod app_state;
-
+use std::sync::Arc;
 use app_state::AppState;
 use crate::configuration::AppConfiguration;
 use actix_cors::{Cors, CorsFactory};
-use actix_web::{web, middleware::Logger, HttpServer, App, web::Data, http::header::{AUTHORIZATION, CONTENT_TYPE}, HttpResponse};
+use actix_web::{web, middleware::Logger, HttpServer, App, http::header::{AUTHORIZATION, CONTENT_TYPE}, HttpResponse};
 use actix::{Addr, SyncArbiter};
 use crate::repository::Repository;
 use actix_identity::{IdentityService, CookieIdentityPolicy};
@@ -12,18 +12,18 @@ use crate::service::user::*;
 pub fn start(config: AppConfiguration)  {
     let domain: String = config.domain.clone();
     let app_url = format!("127.0.0.1:{}", config.app_port);
+    let database_url = config.get_database_url();
+    let database_address = SyncArbiter::start(
+        1,
+        move || Repository::new(database_url.clone()));
+    let data = web::Data::new(AppState {
+        app_configuration: config.clone(),
+        repository: database_address,
+    });
     HttpServer::new(move || {
         let cors = get_cors(&config);
-        let database_url = config.get_database_url();
-        let database_address = SyncArbiter::start(
-            num_cpus::get(),
-            move || Repository::new(database_url.clone()));
-        let data = Data::new(AppState {
-            app_configuration: config.clone(),
-            repository: database_address,
-        });
         App::new()
-            .data(data.clone())
+            .app_data(data.clone())
             .wrap(Logger::default())
             .wrap(cors)
             .wrap(IdentityService::new(

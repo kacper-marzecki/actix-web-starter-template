@@ -1,7 +1,7 @@
 use validator::{Validate, ValidationError};
 
 
-#[derive(Debug, Validate, Deserialize)]
+#[derive(Debug, Validate, Deserialize, Serialize)]
 pub struct RegisterUserRequest {
     #[validate(length(min = 1))]
     pub username: String,
