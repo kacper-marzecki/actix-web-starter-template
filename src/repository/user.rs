@@ -55,10 +55,10 @@ impl Handler<RegisterUser> for Repository {
    type Result = AppResult<User>;
    fn handle(&mut self, msg: RegisterUser, ctx: &mut Self::Context) -> Self::Result {
        use crate::repository::schema::users::dsl::*;
-       let conn = self.get_conn()?;
-       return diesel::insert_into(users::table)
+       let conn = &self.0.get()?;
+       return diesel::insert_into(users)
            .values(msg)
-           .get_result(&conn)
+           .get_result(conn)
            .map_err(|err| AppError::InternalServerError);
    }
 }

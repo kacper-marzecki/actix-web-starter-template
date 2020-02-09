@@ -1,9 +1,10 @@
 
 mod request;
 mod response;
+
 pub mod authentication;
 
-use actix_web::{web, HttpResponse};
+use actix_web::{ web, HttpResponse};
 use crate::app::app_state::AppState;
 use futures::{Future, FutureExt, TryFutureExt};
 use actix::Addr;
@@ -18,7 +19,7 @@ use validator::{Validate, ValidationErrors};
 use crate::repository::user::RegisterUser;
 use crate::service::user::response::UserResponse;
 
-async fn register_user(
+pub async fn register_user(
     user_data: web::Json<RegisterUserRequest>,
     state: web::Data<AppState>,
 ) -> Result< HttpResponse, AppError> {

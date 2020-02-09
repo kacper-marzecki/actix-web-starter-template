@@ -7,6 +7,7 @@ use actix_web::{web, middleware::Logger, HttpServer, App, web::Data, http::heade
 use actix::{Addr, SyncArbiter};
 use crate::repository::Repository;
 use actix_identity::{IdentityService, CookieIdentityPolicy};
+use crate::service::user::*;
 
 pub fn start(config: AppConfiguration)  {
     let domain: String = config.domain.clone();
@@ -17,12 +18,12 @@ pub fn start(config: AppConfiguration)  {
         let database_address = SyncArbiter::start(
             num_cpus::get(),
             move || Repository::new(database_url.clone()));
-        let state = AppState {
+        let data = Data::new(AppState {
             app_configuration: config.clone(),
             repository: database_address,
-        };
+        });
         App::new()
-            .data(Data::new(state))
+            .data(data.clone())
             .wrap(Logger::default())
             .wrap(cors)
             .wrap(IdentityService::new(
@@ -57,8 +58,9 @@ fn get_cors(config: &AppConfiguration)-> CorsFactory {
 }
 
 fn routing_configuration(app: &mut web::ServiceConfig) {
-    app.service(web::resource("/").to( |config: Data<AppConfiguration>| {
-        println!("{:?}", config);
-        HttpResponse::Ok()
-    }));
+    app.service(
+            web::resource("/").to(||{HttpResponse::Ok()}))
+        .service(
+            web::resource("/register").to(crate::service::user::register_user)
+        );
 }

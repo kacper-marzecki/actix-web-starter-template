@@ -24,14 +24,16 @@ impl Repository {
     pub fn new(database_url: String)-> Self {
         Repository(new_pool(database_url.clone()))
     }
-    pub fn get_conn(self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
+    pub fn get_conn(&self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
         self.0.get().map_err(AppError::from)
     }
 }
 
 pub fn new_pool(database_url: String) -> ConnectionPool {
+    println!("database url: {}", database_url.clone());
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     r2d2::Pool::builder()
-        .build(manager)
-        .expect("Cannot create connection pool")
+    .max_size(5)
+    .build(manager)
+    .expect("Cannot create connection pool")
 }
