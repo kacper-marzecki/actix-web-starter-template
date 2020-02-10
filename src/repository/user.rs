@@ -4,6 +4,8 @@ use crate::common::*;
 use crate::repository::Repository;
 use crate::model::user::User;
 use jsonwebtoken::TokenData;
+use uuid::Uuid;
+use diesel::sql_types::Serial;
 use crate::repository::schema::*;
 
 #[derive(Debug)]
@@ -59,6 +61,9 @@ impl Handler<RegisterUser> for Repository {
        return diesel::insert_into(users)
            .values(msg)
            .get_result(conn)
-           .map_err(|err| AppError::InternalServerError);
+           .map_err(|err| {
+               println!("{:?}", err);
+               AppError::InternalServerError
+           });
    }
 }

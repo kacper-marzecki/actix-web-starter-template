@@ -5,7 +5,7 @@ use crate::repository::schema::users;
 
 #[derive(Debug, Queryable, Identifiable)]
 pub struct User {
-    pub id: Uuid,
+    pub id: i32,
     pub username: String,
     pub email: String,
     pub password_hash: String,

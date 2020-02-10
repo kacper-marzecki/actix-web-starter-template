@@ -3,7 +3,7 @@ use chrono::NaiveDateTime;
 
 #[derive(Debug, Serialize)]
 pub struct UserResponse {
-    pub id: Uuid,
+    pub id: i32,
     pub username: String,
     pub email: String
 }
