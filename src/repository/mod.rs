@@ -3,7 +3,7 @@ use diesel::{
     pg::PgConnection,
     r2d2::{self, ConnectionManager, Pool, PooledConnection,},
 };
-use actix::SyncContext;
+use actix::Context;
 use std::error::Error;
 pub use crate::common::AppError;
 
@@ -17,14 +17,14 @@ type ConnectionPool = Pool<ConnectionMgr>;
 pub struct Repository(ConnectionPool);
 
 impl Actor for Repository {
-    type Context = SyncContext<Self>;
+    type Context = Context<Self>;
 }
 
 impl Repository {
     pub fn new(database_url: String)-> Self {
         Repository(new_pool(database_url.clone()))
     }
-    pub fn get_conn(&self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
+    pub fn get_conn(&mut self) -> Result<PooledConnection<ConnectionMgr>, AppError> {
         self.0.get().map_err(AppError::from)
     }
 }

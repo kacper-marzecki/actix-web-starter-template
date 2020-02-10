@@ -9,4 +9,7 @@ create table users (
     updated_at  timestamp default CURRENT_TIMESTAMP not null
 );
 
+create unique index users_unique_username on users (username);
+create unique index users_unique_email on users (email);
+
 SELECT diesel_manage_updated_at('users');

@@ -21,18 +21,17 @@ use crate::service::user::response::UserResponse;
 use std::sync::Arc;
 
 pub async fn register_user(
-    user_data: web::Json<RegisterUserRequest>,
+    request: web::Json<RegisterUserRequest>,
     state: web::Data<AppState>
 ) -> impl Responder {
-    user_data.0.validate()
+    request.0.validate()
         .map_err(|err: ValidationErrors| AppError::UnprocessableEntity(json!(String::from("Validation error"))))?;
     let repository = state.repository.clone();
-    let request = user_data.into_inner();
+    let data = request.into_inner();
     repository.send(RegisterUser{
-        username: request.username,
-        email: request.email,
-        password_hash: authentication::hash_password(&request.password)?,
-    }).await?
+        username: data.username,
+        email: data.email,
+        password_hash: authentication::hash_password(&data.password)?,}).await?
         .map(|user|{
             HttpResponse::Ok().json(UserResponse{
                 id: user.id,
@@ -40,4 +39,4 @@ pub async fn register_user(
                 email: user.email
             })
         })
-    }
+}

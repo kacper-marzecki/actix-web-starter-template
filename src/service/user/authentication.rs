@@ -1,4 +1,5 @@
 use argonautica::{Hasher, Verifier};
+use argonautica::config::Variant;
 use actix_web::web::Data;
 use crate::app::app_state::AppState;
 use actix_web::HttpRequest;
@@ -17,9 +18,10 @@ lazy_static::lazy_static! {
 }
 
 pub fn hash_password(password: &str) -> Result<String, AppError> {
-    Hasher::default()
+    Hasher::fast_but_insecure()
         .with_password(password)
         .with_secret_key(SECRET_KEY.as_str())
+        .configure_variant(Variant::Argon2i)
         .hash()
         .map_err(|err| {
             dbg!(err);
