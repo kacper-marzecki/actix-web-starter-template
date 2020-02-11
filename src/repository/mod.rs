@@ -35,5 +35,6 @@ pub fn new_pool(database_url: String) -> ConnectionPool {
     r2d2::Pool::builder()
     .max_size(5)
     .build(manager)
+    .map(|pool| {println!("Connection pool created."); pool})
     .expect("Cannot create connection pool")
 }

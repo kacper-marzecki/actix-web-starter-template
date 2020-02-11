@@ -59,12 +59,18 @@ impl Handler<RegisterUser> for Repository {
    fn handle(&mut self, msg: RegisterUser, ctx: &mut Self::Context) -> Self::Result {
        use crate::repository::schema::users::dsl::*;
        let conn = self.get_conn()?;
-       return diesel::insert_into(users)
+
+       let current = users.select(username).filter(username.eq(&msg.username)).limit(1).load::<String>(&conn)?;
+       if !current.is_empty() {
+        Err(AppError::UnprocessableEntity(json!(format!("User with username {} already exists", msg.username.clone()))))
+       } else {
+       diesel::insert_into(users)
            .values(msg)
            .get_result(&conn)
            .map_err(|err| {
                println!("{:?}", err);
                AppError::InternalServerError
-           });
+           })
+       }
    }
 }

@@ -33,14 +33,13 @@ pub enum AppError {
     // 422
     #[fail(display = "Unprocessable Entity: {}", _0)]
     UnprocessableEntity(JsonValue),
+    
 
     // 500
     #[fail(display = "Internal Server Error")]
     InternalServerError,
 }
 
-// the ResponseError trait lets us convert errors to http responses with appropriate data
-// https://actix.rs/docs/errors/
 impl ResponseError for AppError {
     fn error_response(&self) -> HttpResponse {
         match *self {
