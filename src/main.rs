@@ -11,23 +11,22 @@ extern crate serde_derive;
 #[macro_use]
 extern crate validator_derive;
 
-mod configuration;
 mod app;
+mod common;
+mod configuration;
+mod model;
 mod repository;
 mod service;
-mod model;
-mod common;
 
 use dotenv;
 use envconfig::Envconfig;
-use std::{env};
-
+use std::env;
 
 fn main() {
     dotenv::dotenv().ok();
     let app_configuration = match configuration::AppConfiguration::init() {
         Ok(configuration) => configuration,
-        Err(cause) => panic!("Error initializing Application Configuration: {:?}", cause)
+        Err(cause) => panic!("Error initializing Application Configuration: {:?}", cause),
     };
     configuration::setup_logger(&app_configuration);
 

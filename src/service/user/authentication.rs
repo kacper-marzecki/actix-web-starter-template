@@ -1,16 +1,16 @@
-use argonautica::{Hasher, Verifier};
-use argonautica::config::Variant;
-use actix_web::web::Data;
 use crate::app::app_state::AppState;
-use actix_web::HttpRequest;
-use futures::{Future, TryFutureExt, FutureExt};
 use crate::common::{AppError, AppResult};
-use actix_http::http::header::AUTHORIZATION;
 use crate::repository::user::{Authenticate, Authentication};
+use actix_http::http::header::AUTHORIZATION;
 use actix_http::http::HeaderValue;
-use std::error::Error;
+use actix_web::web::Data;
+use actix_web::HttpRequest;
+use argonautica::config::Variant;
+use argonautica::{Hasher, Verifier};
+use futures::{Future, FutureExt, TryFutureExt};
 use jsonwebtoken::{decode, encode, Header, TokenData, Validation};
 use std::env;
+use std::error::Error;
 use uuid::Uuid;
 
 lazy_static::lazy_static! {

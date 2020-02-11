@@ -1,15 +1,19 @@
 pub mod app_state;
-use std::sync::Arc;
-use app_state::AppState;
 use crate::configuration::AppConfiguration;
-use actix_cors::{Cors, CorsFactory};
-use actix_web::{web, middleware::Logger, HttpServer, App, http::header::{AUTHORIZATION, CONTENT_TYPE}, HttpResponse};
-use actix::{Addr, SyncArbiter, Actor};
 use crate::repository::Repository;
-use actix_identity::{IdentityService, CookieIdentityPolicy};
 use crate::service::user::*;
+use actix::{Actor, Addr, SyncArbiter};
+use actix_cors::{Cors, CorsFactory};
+use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_web::{
+    http::header::{AUTHORIZATION, CONTENT_TYPE},
+    middleware::Logger,
+    web, App, HttpResponse, HttpServer,
+};
+use app_state::AppState;
+use std::sync::Arc;
 
-pub fn start(config: AppConfiguration)  {
+pub fn start(config: AppConfiguration) {
     let domain: String = config.domain.clone();
     let app_url = format!("127.0.0.1:{}", config.app_port);
     let database_url = config.get_database_url();
@@ -36,13 +40,13 @@ pub fn start(config: AppConfiguration)  {
                     .secure(false),
             ))
             .configure(routing_configuration)
-        })
-        .bind(app_url)
-        .unwrap()
-        .run();
+    })
+    .bind(app_url)
+    .unwrap()
+    .run();
 }
 
-fn get_cors(config: &AppConfiguration)-> CorsFactory {
+fn get_cors(config: &AppConfiguration) -> CorsFactory {
     match &config.frontend_url {
         Some(frontend_url) => Cors::new()
             .allowed_origin(&frontend_url)
@@ -59,9 +63,8 @@ fn get_cors(config: &AppConfiguration)-> CorsFactory {
 }
 
 fn routing_configuration(app: &mut web::ServiceConfig) {
-    app.service(
-            web::resource("/").to(||{HttpResponse::Ok()}))
+    app.service(web::resource("/").to(|| HttpResponse::Ok()))
         .service(
-            web::resource("/register").route(web::post().to(crate::service::user::register_user))
+            web::resource("/register").route(web::post().to(crate::service::user::register_user)),
         );
 }

@@ -1,8 +1,8 @@
-use std::error::Error;
 use diesel::r2d2;
+use std::error::Error;
 
-use actix_web::{error::ResponseError, http::StatusCode, HttpResponse};
 use actix::MailboxError;
+use actix_web::{error::ResponseError, http::StatusCode, HttpResponse};
 use diesel::{
     r2d2::PoolError,
     result::{DatabaseErrorKind, Error as DieselError},
@@ -12,7 +12,6 @@ use libreauth::pass::ErrorCode as PassErrorCode;
 use serde_json::{Map as JsonMap, Value as JsonValue};
 use std::convert::From;
 use validator::ValidationErrors;
-
 
 pub type AppResult<T, E = AppError> = std::result::Result<T, E>;
 
@@ -33,7 +32,6 @@ pub enum AppError {
     // 422
     #[fail(display = "Unprocessable Entity: {}", _0)]
     UnprocessableEntity(JsonValue),
-    
 
     // 500
     #[fail(display = "Internal Server Error")]
@@ -80,6 +78,7 @@ impl From<JwtError> for AppError {
 
 impl From<DieselError> for AppError {
     fn from(error: DieselError) -> Self {
+        println!("Diesel error: {:?}", error);
         match error {
             DieselError::DatabaseError(kind, info) => {
                 if let DatabaseErrorKind::UniqueViolation = kind {
@@ -129,4 +128,3 @@ impl From<ValidationErrors> for AppError {
         }))
     }
 }
-

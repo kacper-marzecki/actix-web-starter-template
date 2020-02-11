@@ -1,6 +1,6 @@
-use actix::prelude::Addr;
-use crate::repository::Repository;
 use crate::configuration::AppConfiguration;
+use crate::repository::Repository;
+use actix::prelude::Addr;
 
 pub struct AppState {
     pub repository: Addr<Repository>,
