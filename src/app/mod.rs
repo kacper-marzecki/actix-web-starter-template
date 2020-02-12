@@ -5,6 +5,7 @@ use crate::service::user::*;
 use actix::{Actor, Addr, SyncArbiter};
 use actix_cors::{Cors, CorsFactory};
 use actix_identity::{CookieIdentityPolicy, IdentityService};
+use crate::service::user::authentication::Authorization;
 use actix_web::{
     http::header::{AUTHORIZATION, CONTENT_TYPE},
     middleware::Logger,
@@ -63,8 +64,9 @@ fn get_cors(config: &AppConfiguration) -> CorsFactory {
 }
 
 fn routing_configuration(app: &mut web::ServiceConfig) {
-    app.service(web::resource("/").to(|| HttpResponse::Ok()))
-        .service(
-            web::resource("/register").route(web::post().to(crate::service::user::register_user)),
-        );
+    app.service(
+        web::resource("/protected")
+            .to(|auth: Authorization| HttpResponse::Ok()),
+    )
+    .service(web::resource("/register").route(web::post().to(crate::service::user::register_user)));
 }

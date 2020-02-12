@@ -1,4 +1,11 @@
+use crate::common::AppError;
+use actix_http::Payload;
+use actix_identity::{Identity, RequestIdentity};
+use actix_web::{FromRequest, HttpRequest};
+use futures::future::{err, ok, Ready};
+use std::future::Future;
 use validator::{Validate, ValidationError};
+
 
 #[derive(Debug, Validate, Deserialize, Serialize)]
 pub struct RegisterUserRequest {

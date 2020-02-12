@@ -2,6 +2,7 @@ mod request;
 mod response;
 
 pub mod authentication;
+pub mod middleware;
 
 use crate::app::app_state::AppState;
 use crate::common::AppError;
